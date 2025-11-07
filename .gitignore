@@ -3,3 +3,4 @@ node_modules/
 frontend/sajxx/.next/
 frontend/sajxx/.env.local
 docs/
+.env
