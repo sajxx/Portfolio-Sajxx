@@ -15,19 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Sajin | Portfolio",
-  description: "Personal portfolio showcasing projects, skills, and achievements.",
+  title: "Sajin | Full Stack Developer",
+  description: "Personal portfolio showcasing projects, skills, and achievements. Building beautiful digital experiences with modern web technologies.",
+  icons: {
+    icon: "/Portfolio-Sajxx-icon.png",
+    shortcut: "/Portfolio-Sajxx-icon.png",
+    apple: "/Portfolio-Sajxx-icon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-slate-950 text-slate-100 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex min-h-screen flex-col">
           <Header />
-          <div className="flex-1 pt-10">{children}</div>
+          <div className="flex-1">{children}</div>
           <Footer />
         </div>
       </body>

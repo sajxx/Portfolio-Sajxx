@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 const sections = [
   { id: "hero", label: "Home" },
   { id: "about", label: "About" },
+  { id: "expertise", label: "Expertise" },
   { id: "projects", label: "Projects" },
-  { id: "skills", label: "Skills" },
   { id: "achievements", label: "Achievements" },
   { id: "contact", label: "Contact" },
 ];
@@ -15,29 +15,49 @@ const sections = [
 export default function Header() {
   const [activeSection, setActiveSection] = useState("hero");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const isClickScrolling = useRef(false);
+  const scrollTimeout = useRef(null);
 
   useEffect(() => {
-    const observed = new Set();
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // Only update active section if we're not in the middle of a click-scroll
+        if (isClickScrolling.current) return;
+
+        // Find the entry with the highest intersection ratio
+        let maxEntry = null;
+        let maxRatio = 0;
+
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            maxEntry = entry;
           }
         });
+
+        if (maxEntry) {
+          setActiveSection(maxEntry.target.id);
+        }
       },
       {
-        rootMargin: "-40% 0px -55% 0px",
-        threshold: [0.1, 0.5, 1],
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
       }
     );
 
     sections.forEach(({ id }) => {
       const el = document.getElementById(id);
-      if (el && !observed.has(id)) {
+      if (el) {
         observer.observe(el);
-        observed.add(id);
       }
     });
 
@@ -51,53 +71,83 @@ export default function Header() {
     return () => window.removeEventListener("resize", closeOnResize);
   }, [isMenuOpen]);
 
+  const handleNavClick = (sectionId) => {
+    setIsMenuOpen(false);
+    setActiveSection(sectionId);
+    
+    // Disable observer updates during click-scroll
+    isClickScrolling.current = true;
+    
+    // Clear any existing timeout
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current);
+    }
+    
+    // Re-enable observer after scroll animation completes (typically ~1s for smooth scroll)
+    scrollTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 1200);
+  };
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur border-b border-slate-800/60 bg-slate-950/70">
-      <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="#hero" className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-200">
-          Sajxx
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'glass border-b border-white/10 shadow-lg py-3' 
+          : 'bg-transparent py-5'
+      }`}
+    >
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6">
+        <Link 
+          href="#hero" 
+          className="group relative text-lg font-bold tracking-wider text-white"
+        >
+          <span className="relative z-10">SAJXX</span>
+          <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></span>
         </Link>
+        
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 text-slate-200 hover:border-slate-500 hover:text-white lg:hidden"
+          className="relative flex h-11 w-11 items-center justify-center rounded-xl glass text-white hover:bg-white/10 transition-all lg:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle navigation"
         >
           <span className="sr-only">Menu</span>
-          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-            />
-          </svg>
+          <div className="flex flex-col gap-1.5">
+            <span className={`block h-0.5 w-5 bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`block h-0.5 w-5 bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block h-0.5 w-5 bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          </div>
         </button>
+
         <div
-          className={`${
+          className={`absolute top-full left-0 right-0 mt-2 mx-4 lg:relative lg:top-auto lg:left-auto lg:right-auto lg:mx-0 lg:mt-0 ${
             isMenuOpen
               ? "max-h-96 opacity-100"
               : "max-h-0 opacity-0 lg:max-h-full lg:opacity-100"
-          } overflow-hidden rounded-2xl border border-slate-700/40 bg-slate-900/80 shadow-lg transition-all duration-300 lg:flex lg:items-center lg:border-none lg:bg-transparent lg:opacity-100 lg:shadow-none`}
+          } overflow-hidden transition-all duration-300`}
         >
-          <ul className="flex w-full flex-col gap-2 px-4 py-4 text-sm text-slate-300 lg:flex-row lg:items-center lg:gap-6 lg:px-0 lg:py-0">
-            {sections.map((section) => {
+          <ul className="glass rounded-2xl p-4 shadow-2xl lg:flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-transparent lg:p-0 lg:shadow-none">
+            {sections.map((section, index) => {
               const isActive = activeSection === section.id;
               return (
-                <li key={section.id}>
+                <li key={section.id} style={{ animationDelay: `${index * 50}ms` }}>
                   <Link
                     href={`#${section.id}`}
-                    className={`flex items-center gap-2 rounded-full px-4 py-2 transition-colors ${
+                    className={`block relative px-5 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                       isActive
-                        ? "bg-blue-500/30 text-white"
-                        : "hover:text-white"
+                        ? "text-white"
+                        : "text-slate-300 hover:text-white"
                     }`}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setActiveSection(section.id);
-                    }}
+                    onClick={() => handleNavClick(section.id)}
                   >
-                    <span className="h-2 w-2 rounded-full bg-blue-400 opacity-80" hidden={!isActive} />
-                    {section.label}
+                    {isActive && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></span>
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>}
+                      {section.label}
+                    </span>
                   </Link>
                 </li>
               );
