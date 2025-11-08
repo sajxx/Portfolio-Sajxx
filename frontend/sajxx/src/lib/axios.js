@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:5000";
+const baseURL = process.env.NEXT_PUBLIC_API_BASE;
 
 const TOKEN_KEY = "portfolio_admin_token";
 let inMemoryToken = null;
