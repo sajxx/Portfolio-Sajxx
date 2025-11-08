@@ -29,8 +29,14 @@ export default function SkillsSection({ skills }) {
                   .map((skill) => (
                     <li
                       key={skill._id ?? skill.name}
-                      className="rounded-full bg-slate-800/80 px-3 py-1"
+                      className="flex items-center gap-2 rounded-full bg-slate-800/80 px-3 py-1"
                     >
+                      {skill.icon ? (
+                        <i
+                          className={`fa ${skill.icon} fa-fw text-base text-blue-300`}
+                          aria-hidden="true"
+                        />
+                      ) : null}
                       {skill.name}
                       {skill.proficiency
                         ? ` · ${skill.proficiency.toUpperCase()}`
