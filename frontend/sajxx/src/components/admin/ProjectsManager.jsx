@@ -14,6 +14,7 @@ const blankProject = {
   category: "web",
   featured: false,
   technologies: "",
+  images: "",
 };
 
 export default function ProjectsManager() {
@@ -63,12 +64,14 @@ export default function ProjectsManager() {
           await api.updateProject(editingId, {
             ...formState,
             technologies: formState.technologies?.split?.(",") ?? [],
+            images: formState.images?.split?.(",").map(url => url.trim()).filter(Boolean) ?? [],
           });
           setStatus({ type: "success", message: "Project updated" });
         } else {
           await api.createProject({
             ...formState,
             technologies: formState.technologies?.split?.(",") ?? [],
+            images: formState.images?.split?.(",").map(url => url.trim()).filter(Boolean) ?? [],
           });
           setStatus({ type: "success", message: "Project created" });
         }
@@ -93,6 +96,7 @@ export default function ProjectsManager() {
       category: project.category ?? "web",
       featured: Boolean(project.featured),
       technologies: (project.technologies ?? []).join(", "),
+      images: (project.images ?? []).join(", "),
     });
   };
 
@@ -172,7 +176,22 @@ export default function ProjectsManager() {
             value={formState.technologies ?? ""}
             onChange={handleChange}
             className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
+            placeholder="React, Node.js, MongoDB"
           />
+        </label>
+        <label className="md:col-span-2 flex flex-col text-sm text-slate-200">
+          Image URLs (comma separated)
+          <textarea
+            name="images"
+            rows={3}
+            value={formState.images ?? ""}
+            onChange={handleChange}
+            className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
+            placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+          />
+          <span className="text-xs text-slate-500 mt-1">
+            Enter multiple image URLs separated by commas. Images will auto-scroll in the project card.
+          </span>
         </label>
         <label className="flex flex-col text-sm text-slate-200">
           GitHub URL
@@ -226,7 +245,14 @@ export default function ProjectsManager() {
           >
             <div>
               <p className="text-sm font-semibold text-white">{project.title}</p>
-              <p className="text-xs text-slate-400">{project.category}</p>
+              <p className="text-xs text-slate-400">
+                {project.category}
+                {project.images?.length > 0 && (
+                  <span className="ml-2 text-blue-400">
+                    • {project.images.length} image{project.images.length !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </p>
             </div>
             <div className="flex gap-2 text-sm">
               <button

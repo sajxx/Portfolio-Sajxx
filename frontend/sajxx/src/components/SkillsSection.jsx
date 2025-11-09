@@ -39,7 +39,9 @@ function ExpertiseCard({ category, skills, index }) {
       className={`glass rounded-2xl p-8 border border-white/10 hover:border-blue-500/30 transition-all duration-300 card-hover ${
         isVisible ? 'animate-scaleIn' : 'opacity-0'
       }`}
-      style={{ animationDelay: `${index * 150}ms` }}
+      style={{ 
+        animationDelay: isVisible ? `${index * 150}ms` : '0ms',
+      }}
     >
       <div className="flex items-center gap-4 mb-6">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">

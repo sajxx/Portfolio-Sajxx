@@ -26,6 +26,18 @@ const profileSchema = new mongoose.Schema({
   available: {
     type: Boolean,
     default: true
+  },
+  startDate: {
+    type: Date,
+    default: null
+  },
+  projectCount: {
+    type: Number,
+    default: 0
+  },
+  certificationCount: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

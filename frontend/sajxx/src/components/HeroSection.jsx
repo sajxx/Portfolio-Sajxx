@@ -4,12 +4,29 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Image from "next/image";
 
-export default function HeroSection({ profile }) {
+export default function HeroSection({ profile, skills = [] }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Calculate years of experience from startDate
+  const calculateYearsOfExperience = () => {
+    if (!profile?.startDate) return 5; // Default fallback
+    const start = new Date(profile.startDate);
+    const now = new Date();
+    const diffInMs = now - start;
+    const years = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 365.25));
+    return years > 0 ? years : 1; // Minimum 1 year
+  };
+
+  const yearsOfExperience = calculateYearsOfExperience();
+  
+  // Count technologies from skills (only advanced and expert level)
+  const technologiesMastered = skills.filter(
+    skill => skill.proficiency === 'advanced' || skill.proficiency === 'expert'
+  ).length || 15; // Fallback to 15 if no skills
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center pt-24 pb-16">
@@ -145,20 +162,20 @@ export default function HeroSection({ profile }) {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 max-w-4xl mx-auto w-full">
             <div className="glass rounded-2xl p-6 border border-white/10 hover:border-blue-500/30 transition-all group">
-              <div className="text-4xl font-bold gradient-text mb-2">5+</div>
+              <div className="text-4xl font-bold gradient-text mb-2">{yearsOfExperience}+</div>
               <div className="text-sm text-slate-400">Years Experience</div>
             </div>
             <div className="glass rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 transition-all group">
-              <div className="text-4xl font-bold gradient-text mb-2">50+</div>
+              <div className="text-4xl font-bold gradient-text mb-2">{profile?.projectCount || 50}+</div>
               <div className="text-sm text-slate-400">Projects Completed</div>
             </div>
             <div className="glass rounded-2xl p-6 border border-white/10 hover:border-pink-500/30 transition-all group">
-              <div className="text-4xl font-bold gradient-text mb-2">30+</div>
-              <div className="text-sm text-slate-400">Happy Clients</div>
+              <div className="text-4xl font-bold gradient-text mb-2">{profile?.certificationCount || 0}+</div>
+              <div className="text-sm text-slate-400">Certifications Earned</div>
             </div>
             <div className="glass rounded-2xl p-6 border border-white/10 hover:border-blue-500/30 transition-all group">
-              <div className="text-4xl font-bold gradient-text mb-2">15+</div>
-              <div className="text-sm text-slate-400">Awards Won</div>
+              <div className="text-4xl font-bold gradient-text mb-2">{technologiesMastered}+</div>
+              <div className="text-sm text-slate-400">Technologies Mastered</div>
             </div>
           </div>
         </div>

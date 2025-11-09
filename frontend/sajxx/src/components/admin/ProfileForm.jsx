@@ -17,6 +17,9 @@ const defaultProfile = {
   resumeUrl: "",
   available: true,
   socials: [],
+  startDate: "",
+  projectCount: 0,
+  certificationCount: 0,
 };
 
 export default function ProfileForm() {
@@ -205,6 +208,52 @@ export default function ProfileForm() {
             className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
           />
         </label>
+        
+        {/* Hero Stats Section */}
+        <div className="md:col-span-2 space-y-4 rounded-lg border border-slate-700 bg-slate-900/60 p-4">
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-slate-200">Hero Section Statistics</p>
+            <p className="text-xs text-slate-400">
+              These values appear in the stats section below your hero image.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="flex flex-col text-sm text-slate-200">
+              Career Start Date
+              <input
+                type="date"
+                name="startDate"
+                value={profile.startDate ? new Date(profile.startDate).toISOString().split('T')[0] : ''}
+                onChange={handleChange}
+                className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
+              />
+              <span className="text-xs text-slate-400 mt-1">Years of experience will be auto-calculated</span>
+            </label>
+            <label className="flex flex-col text-sm text-slate-200">
+              Projects Completed
+              <input
+                type="number"
+                name="projectCount"
+                value={profile.projectCount || 0}
+                onChange={handleChange}
+                min="0"
+                className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
+              />
+            </label>
+            <label className="flex flex-col text-sm text-slate-200">
+              Certifications Earned
+              <input
+                type="number"
+                name="certificationCount"
+                value={profile.certificationCount || 0}
+                onChange={handleChange}
+                min="0"
+                className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
+              />
+            </label>
+          </div>
+        </div>
+        
         <div className="md:col-span-2 space-y-4 rounded-lg border border-slate-700 bg-slate-900/60 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">

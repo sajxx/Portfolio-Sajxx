@@ -38,7 +38,9 @@ function AchievementCard({ achievement, index }) {
     <div
       ref={cardRef}
       className={`group relative ${isVisible ? 'animate-fadeInUp' : 'opacity-0'}`}
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ 
+        animationDelay: isVisible ? `${index * 100}ms` : '0ms',
+      }}
     >
       {/* Timeline connector */}
       <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500 via-purple-500 to-transparent md:hidden"></div>

@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <main className="relative">
-      <HeroSection profile={profile} />
+      <HeroSection profile={profile} skills={skills} />
 
       <div className="mx-auto max-w-7xl px-6 space-y-32 pb-16">
         <AboutSection profile={profile} />
