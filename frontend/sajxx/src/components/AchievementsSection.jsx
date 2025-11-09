@@ -137,7 +137,7 @@ export default function AchievementsSection({ achievements }) {
               </svg>
             </div>
             <p className="text-slate-400 text-lg">
-              Achievements will appear here once added in the admin panel.
+              🏆 The trophy shelf is being polished... Big achievements are brewing! Stay tuned! ✨
             </p>
           </div>
         )}

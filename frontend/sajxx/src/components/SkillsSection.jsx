@@ -118,7 +118,7 @@ export default function SkillsSection({ skills }) {
             </svg>
           </div>
           <p className="text-slate-400 text-lg">
-            Add skills via the admin dashboard to highlight your expertise and technical strengths.
+            ⚡ Power-up mode activated! The skill tree is expanding... Come back to see the full arsenal! 🎯�
           </p>
         </div>
       )}

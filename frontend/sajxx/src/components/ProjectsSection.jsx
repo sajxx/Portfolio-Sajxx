@@ -255,7 +255,7 @@ export default function ProjectsSection({ projects, isLoading }) {
               </svg>
             </div>
             <p className="text-slate-400 text-lg">
-              No projects yet. Head to the admin area to add your first showcase.
+              � Something amazing is cooking in the lab! Check back soon for mind-blowing projects! 🎨💻
             </p>
           </div>
         )}

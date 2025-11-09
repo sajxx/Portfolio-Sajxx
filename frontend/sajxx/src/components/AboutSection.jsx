@@ -37,7 +37,7 @@ export default function AboutSection({ profile }) {
           <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
           <p className="text-lg md:text-xl text-slate-300 leading-relaxed pl-6">
             {profile?.about ||
-              "Use the admin dashboard to add a compelling summary that highlights your mission, values, and specialties. Share your journey, what drives you, and what makes your approach unique."}
+              "✍️ The story is being written as we speak... Every great developer has an origin story, and this one is going to be legendary! Check back soon! 🚀"}
           </p>
         </div>
 
