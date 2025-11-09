@@ -10,7 +10,7 @@ const blankSkill = {
   name: "",
   proficiency: "advanced",
   category: "general",
-  icon: "",
+  iconUrl: "",
   description: "",
 };
 
@@ -72,13 +72,13 @@ export default function SkillsManager() {
 
   const handleEdit = (skill) => {
     setEditingId(skill._id);
-    setFormState({
+    setFormState((prev) => ({
       name: skill.name ?? "",
       proficiency: skill.proficiency ?? "advanced",
       category: skill.category ?? "general",
-      icon: skill.icon ?? "",
+      iconUrl: skill.iconUrl ?? "",
       description: skill.description ?? "",
-    });
+    }));
   };
 
   const handleDelete = (id) => {
@@ -148,11 +148,12 @@ export default function SkillsManager() {
           />
         </label>
         <label className="flex flex-col text-sm text-slate-200">
-          Icon (optional)
+          Icon URL (optional)
           <input
-            name="icon"
-            value={formState.icon}
+            name="iconUrl"
+            value={formState.iconUrl}
             onChange={handleChange}
+            placeholder="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/..."
             className="mt-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white"
           />
         </label>

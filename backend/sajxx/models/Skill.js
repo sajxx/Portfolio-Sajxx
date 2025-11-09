@@ -15,7 +15,7 @@ const skillSchema = new mongoose.Schema({
     type: String,
     default: 'general'
   },
-  icon: String,
+  iconUrl: String,
   description: String,
   order: {
     type: Number,
