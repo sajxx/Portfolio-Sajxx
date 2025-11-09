@@ -52,7 +52,7 @@ export default function AboutSection({ profile }) {
                 {profile.available ? "Open to Work" : "Currently Engaged"}
               </p>
               <p className="text-sm text-slate-400 mt-2">
-                {profile.available ? "Available for new opportunities" : "Working on exciting projects"}
+                {profile.available ? "Available for new opportunities" : "Working on exciting projects. Feel free to connect!"}
               </p>
             </div>
           )}

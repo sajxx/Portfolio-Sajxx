@@ -13,7 +13,7 @@ const profileSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: 'Full Stack Developer'
+    default: 'Full Stack Engineer'
   },
   headline: String,
   about: String,

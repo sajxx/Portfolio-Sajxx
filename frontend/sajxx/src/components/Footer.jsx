@@ -1,4 +1,47 @@
-export default function Footer() {
+import { api } from "@/lib/axios";
+
+const fallbackSocials = [
+  { icon: "fa-brands fa-github", label: "GitHub", href: "https://github.com" },
+  { icon: "fa-brands fa-linkedin", label: "LinkedIn", href: "https://linkedin.com" },
+  { icon: "fa-brands fa-x-twitter", label: "Twitter", href: "https://x.com" },
+];
+
+const normalizeHref = (value) => {
+  if (!value) return "";
+  const trimmed = value.trim();
+  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+};
+
+const formatSocials = (socials) => {
+  if (!Array.isArray(socials)) return [];
+  return socials
+    .map((social, index) => {
+      const href = normalizeHref(social?.url);
+      if (!href) return null;
+      const label = social?.label?.trim() || `Social ${index + 1}`;
+      const icon = social?.icon?.trim() || "fa-solid fa-link";
+      return { href, label, icon };
+    })
+    .filter(Boolean);
+};
+
+export default async function Footer() {
+  let socials = [];
+
+  try {
+    const profile = await api.getProfile();
+    socials = formatSocials(profile?.socials);
+  } catch (error) {
+    console.error("Failed  to load profile socials", error);
+  }
+
+  if (!socials.length) {
+    socials = fallbackSocials;
+  }
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -35,24 +78,28 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Social */} 
           <div className="space-y-4">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-slate-300">Connect</h4>
             <div className="flex gap-3">
-              {[
-                { icon: 'fab fa-github', href: '#', label: 'GitHub' },
-                { icon: 'fab fa-linkedin', href: '#', label: 'LinkedIn' },
-                { icon: 'fab fa-twitter', href: '#', label: 'Twitter' },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg glass border border-white/10 text-slate-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/10 transition-all"
-                >
-                  <i className={social.icon}></i>
-                </a>
-              ))}
+              {socials.map((social, index) => {
+                const isExternal = /^https?:/i.test(social.href);
+                const anchorProps = isExternal
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {};
+
+                return (
+                  <a
+                    key={`${social.label}-${index}`}
+                    href={social.href}
+                    aria-label={social.label}
+                    {...anchorProps}
+                    className="flex h-10 w-10 items-center justify-center rounded-lg glass border border-white/10 text-slate-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/10 transition-all"
+                  >
+                    <i className={social.icon} aria-hidden="true"></i>
+                  </a>
+                );
+              })}
             </div>
           </div>
 
