@@ -21,6 +21,9 @@ const app = express();
 
 connectDB();
 
+// Ensure Express respects proxy headers (needed for rate limiting on Render, etc.)
+app.set('trust proxy', process.env.TRUST_PROXY ?? 1);
+
 const corsOrigin = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
   : '*';
