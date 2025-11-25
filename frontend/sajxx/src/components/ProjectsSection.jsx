@@ -255,7 +255,7 @@ export default function ProjectsSection({ projects, isLoading }) {
               </svg>
             </div>
             <p className="text-slate-400 text-lg">
-              � Something amazing is cooking in the lab! Check back soon for mind-blowing projects! 🎨💻
+              Something amazing is cooking in the lab! Check back soon for mind-blowing projects!
             </p>
           </div>
         )}
