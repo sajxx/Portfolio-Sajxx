@@ -13,14 +13,11 @@ const login = async (req, res, next) => {
       return res.status(400).json({ message: 'Password is required' });
     }
 
-    const envPasswordHash = process.env.ADMIN_PASSWORD_HASH;
     const envPassword = process.env.ADMIN_PASSWORD;
 
     let isValid = false;
 
-    if (envPasswordHash) {
-      isValid = await bcrypt.compare(password, envPasswordHash);
-    } else if (envPassword) {
+    if (envPassword) {
       if (isHashed(envPassword)) {
         isValid = await bcrypt.compare(password, envPassword);
       } else {
