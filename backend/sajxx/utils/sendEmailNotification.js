@@ -1,9 +1,15 @@
 let transporter;
+const getSecret = require('./getSecret');
 
 const ensureTransporter = async () => {
   if (transporter) return transporter;
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } = process.env;
+  const SMTP_HOST = getSecret('SMTP_HOST');
+  const SMTP_PORT = getSecret('SMTP_PORT');
+  const SMTP_USER = getSecret('SMTP_USER');
+  const SMTP_PASS = getSecret('SMTP_PASS');
+  const SMTP_SECURE = getSecret('SMTP_SECURE');
+
   if (!SMTP_HOST) {
     return null;
   }
@@ -31,7 +37,7 @@ const sendEmailNotification = async (message) => {
     return;
   }
 
-  const to = process.env.CONTACT_NOTIFICATION_EMAIL;
+  const to = getSecret('CONTACT_NOTIFICATION_EMAIL');
   if (!to) {
     console.info('Email notification skipped (CONTACT_NOTIFICATION_EMAIL not set)');
     return;

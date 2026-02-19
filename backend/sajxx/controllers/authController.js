@@ -1,8 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const getSecret = require('../utils/getSecret');
 
-const buildToken = (payload) =>
-  jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+const buildToken = (payload) => {
+  const secret = getSecret('JWT_SECRET');
+  if (!secret) throw new Error('JWT_SECRET is not configured');
+  return jwt.sign(payload, secret, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+};
 
 const isHashed = (value) => typeof value === 'string' && value.startsWith('$2');
 
@@ -13,7 +17,7 @@ const login = async (req, res, next) => {
       return res.status(400).json({ message: 'Password is required' });
     }
 
-    const envPassword = process.env.ADMIN_PASSWORD;
+    const envPassword = getSecret('ADMIN_PASSWORD');
 
     let isValid = false;
 
