@@ -1,5 +1,5 @@
-# Use Node.js 18 (LTS) or later
-FROM node:18-alpine AS builder
+# Use Node.js 20 (LTS) or later
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -18,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # Production image, copy all the files and run next
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
