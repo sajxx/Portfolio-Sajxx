@@ -27,7 +27,12 @@ const router = express.Router();
  *   liveLink?: string,
  *   category?: 'web' | 'mobile' | 'desktop' | 'other',
  *   featured?: boolean,
- *   order?: number
+ *   order?: number,
+ *   problem?: string,
+ *   architecture?: { frontend?, backend?, authentication?, database?, deployment? },
+ *   engineeringDecisions?: Array<{ title, description }>,
+ *   scalingConsiderations?: string[] | comma-separated string,
+ *   metrics?: Array<{ label, value }>
  * }
  */
 router

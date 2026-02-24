@@ -8,7 +8,15 @@ import ShimmerCard from "@/components/skeletons/ShimmerCard";
 function ProjectCard({ project, index }) {
   const [isVisible, setIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showDetails, setShowDetails] = useState(false);
   const cardRef = useRef(null);
+
+  const hasTechnicalDetails =
+    project.problem ||
+    project.architecture ||
+    (project.engineeringDecisions && project.engineeringDecisions.length > 0) ||
+    (project.scalingConsiderations && project.scalingConsiderations.length > 0) ||
+    (project.metrics && project.metrics.length > 0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -214,6 +222,104 @@ function ProjectCard({ project, index }) {
               </Button>
             )}
           </div>
+
+          {/* Technical Details Toggle */}
+          {hasTechnicalDetails && (
+            <div className="pt-4">
+              <button
+                onClick={() => setShowDetails((prev) => !prev)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg glass border border-white/10 text-sm font-medium text-slate-300 hover:text-white hover:border-blue-500/30 transition-all w-full justify-center"
+              >
+                <svg
+                  className={`w-4 h-4 transition-transform duration-300 ${showDetails ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                {showDetails ? 'Hide' : 'View'} Technical Details
+              </button>
+
+              <div
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                  showDetails ? 'max-h-[2000px] opacity-100 mt-4' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <div className="space-y-5 border-t border-white/10 pt-4">
+                  {/* Problem */}
+                  {project.problem && (
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-2">Problem</h4>
+                      <p className="text-sm text-slate-300 leading-relaxed">{project.problem}</p>
+                    </div>
+                  )}
+
+                  {/* Architecture */}
+                  {project.architecture && (
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-3">Architecture</h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {Object.entries(project.architecture)
+                          .filter(([, v]) => v)
+                          .map(([key, value]) => (
+                            <div key={key} className="px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                              <span className="block text-xs font-semibold text-slate-400 uppercase mb-0.5">{key}</span>
+                              <span className="block text-sm text-slate-200 break-words">{value}</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Engineering Decisions */}
+                  {project.engineeringDecisions?.length > 0 && (
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-3">Engineering Decisions</h4>
+                      <div className="space-y-3">
+                        {project.engineeringDecisions.map((decision, i) => (
+                          <div key={i} className="px-4 py-3 rounded-lg bg-slate-800/30 border border-slate-700/30">
+                            <p className="text-sm font-semibold text-white mb-1">{decision.title}</p>
+                            <p className="text-sm text-slate-400 leading-relaxed">{decision.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Scaling Considerations */}
+                  {project.scalingConsiderations?.length > 0 && (
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-3">Scaling Considerations</h4>
+                      <ul className="space-y-2">
+                        {project.scalingConsiderations.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"></span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Metrics */}
+                  {project.metrics?.length > 0 && (
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-3">Metrics</h4>
+                      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3">
+                        {project.metrics.map((metric, i) => (
+                          <div key={i} className="text-center px-2 py-3 rounded-lg bg-slate-800/50 border border-slate-700/50 overflow-hidden">
+                            <p className="text-base sm:text-lg font-bold gradient-text truncate">{metric.value}</p>
+                            <p className="text-xs text-slate-400 mt-1 truncate">{metric.label}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -221,6 +327,8 @@ function ProjectCard({ project, index }) {
 }
 
 export default function ProjectsSection({ projects, isLoading }) {
+  if (!isLoading && !projects?.length) return null;
+
   return (
     <Section
       id="projects"
@@ -239,7 +347,7 @@ export default function ProjectsSection({ projects, isLoading }) {
           Array.from({ length: 6 }).map((_, index) => (
             <ShimmerCard key={`project-skeleton-${index}`} className="h-96" />
           ))
-        ) : projects?.length ? (
+        ) : (
           projects.map((project, index) => (
             <ProjectCard 
               key={project._id ?? project.title} 
@@ -247,17 +355,6 @@ export default function ProjectsSection({ projects, isLoading }) {
               index={index}
             />
           ))
-        ) : (
-          <div className="col-span-full glass rounded-2xl p-12 text-center border border-white/10">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-              <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <p className="text-slate-400 text-lg">
-              Something amazing is cooking in the lab! Check back soon for mind-blowing projects!
-            </p>
-          </div>
         )}
       </div>
     </Section>

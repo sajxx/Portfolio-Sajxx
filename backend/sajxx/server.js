@@ -16,6 +16,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const authRoutes = require('./routes/authRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const engineeringApproachRoutes = require('./routes/engineeringApproachRoutes');
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/achievements', achievementRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/engineering-approach', engineeringApproachRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

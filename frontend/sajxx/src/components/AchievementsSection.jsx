@@ -114,6 +114,8 @@ function AchievementCard({ achievement, index }) {
 }
 
 export default function AchievementsSection({ achievements }) {
+  if (!achievements?.length) return null;
+
   return (
     <Section
       id="achievements"
@@ -121,26 +123,13 @@ export default function AchievementsSection({ achievements }) {
       title="Achievements & Milestones"
     >
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-        {achievements?.length ? (
-          achievements.map((item, index) => (
-            <AchievementCard
-              key={item._id ?? item.title}
-              achievement={item}
-              index={index}
-            />
-          ))
-        ) : (
-          <div className="col-span-full glass rounded-2xl p-12 text-center border border-white/10">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-              <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-            </div>
-            <p className="text-slate-400 text-lg">
-              🏆 The trophy shelf is being polished... Big achievements are brewing! Stay tuned! ✨
-            </p>
-          </div>
-        )}
+        {achievements.map((item, index) => (
+          <AchievementCard
+            key={item._id ?? item.title}
+            achievement={item}
+            index={index}
+          />
+        ))}
       </div>
     </Section>
   );

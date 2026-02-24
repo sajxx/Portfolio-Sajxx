@@ -9,6 +9,7 @@ import ProjectsManager from "@/components/admin/ProjectsManager";
 import SkillsManager from "@/components/admin/SkillsManager";
 import AchievementsManager from "@/components/admin/AchievementsManager";
 import MessagesManager from "@/components/admin/MessagesManager";
+import EngineeringApproachManager from "@/components/admin/EngineeringApproachManager";
 import { api, authStore } from "@/lib/axios";
 
 export default function AdminPage() {
@@ -112,6 +113,7 @@ export default function AdminPage() {
         <section className="flex flex-col gap-8">
           <ProfileForm />
           <ProjectsManager />
+          <EngineeringApproachManager />
           <SkillsManager />
           <AchievementsManager />
           <MessagesManager />

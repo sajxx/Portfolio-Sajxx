@@ -3,11 +3,12 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
+import EngineeringApproachSection from "@/components/EngineeringApproachSection";
 import AchievementsSection from "@/components/AchievementsSection";
 import ContactSection from "@/components/ContactSection";
 
 export default async function Home() {
-  const { profile, projects, skills, achievements } = await getLandingData();
+  const { profile, projects, skills, achievements, engineeringApproaches } = await getLandingData();
 
   return (
     <main className="relative">
@@ -17,6 +18,7 @@ export default async function Home() {
         <AboutSection profile={profile} />
         <SkillsSection skills={skills} />
         <ProjectsSection projects={projects} />
+        <EngineeringApproachSection approaches={engineeringApproaches} />
         <AchievementsSection achievements={achievements} />
         <ContactSection />
       </div>

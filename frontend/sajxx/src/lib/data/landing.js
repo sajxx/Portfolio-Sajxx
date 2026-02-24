@@ -5,6 +5,7 @@ const emptyState = {
   projects: [],
   skills: [],
   achievements: [],
+  engineeringApproaches: [],
 };
 
 const sampleProfile = {
@@ -19,11 +20,12 @@ const sampleProfile = {
 
 export async function getLandingData() {
   try {
-    const [profile, projects, skills, achievements] = await Promise.all([
+    const [profile, projects, skills, achievements, engineeringApproaches] = await Promise.all([
       api.getProfile(),
       api.getProjects({ featured: true }),
       api.getSkills(),
       api.getAchievements(),
+      api.getEngineeringApproaches(),
     ]);
 
     return {
@@ -31,6 +33,7 @@ export async function getLandingData() {
       projects,
       skills,
       achievements,
+      engineeringApproaches,
     };
   } catch (error) {
     console.error("Failed to fetch landing data", error.message ?? error);

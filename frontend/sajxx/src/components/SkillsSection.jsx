@@ -97,31 +97,20 @@ export default function SkillsSection({ skills }) {
   const grouped = groupByCategory(skills ?? []);
   const categories = Object.keys(grouped);
 
+  if (!categories.length) return null;
+
   return (
     <Section id="expertise" eyebrow="My Expertise" title="What I Do Best">
-      {categories.length ? (
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category, index) => (
-            <ExpertiseCard
-              key={category}
-              category={category}
-              skills={grouped[category]}
-              index={index}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="glass rounded-2xl p-12 text-center border border-white/10">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-            <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </div>
-          <p className="text-slate-400 text-lg">
-            ⚡ Power-up mode activated! The skill tree is expanding... Come back to see the full arsenal! 🎯�
-          </p>
-        </div>
-      )}
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {categories.map((category, index) => (
+          <ExpertiseCard
+            key={category}
+            category={category}
+            skills={grouped[category]}
+            index={index}
+          />
+        ))}
+      </div>
     </Section>
   );
 }
@@ -132,6 +121,7 @@ function getCategoryDescription(category) {
     backend: "Developing robust server-side applications with scalable architecture and secure APIs.",
     database: "Designing and managing efficient database systems for optimal data storage and retrieval.",
     devops: "Automating deployment pipelines and maintaining cloud infrastructure for seamless operations.",
+    "infrastructure & devops": "Managing cloud infrastructure, CI/CD pipelines, containerization, and production reliability.",
     tools: "Leveraging industry-standard tools and technologies to enhance development workflow.",
     general: "A diverse set of technical skills covering various aspects of software development.",
   };

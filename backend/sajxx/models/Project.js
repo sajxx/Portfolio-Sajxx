@@ -1,5 +1,23 @@
 const mongoose = require('mongoose');
 
+const engineeringDecisionSchema = new mongoose.Schema({
+  title: String,
+  description: String
+}, { _id: false });
+
+const metricSchema = new mongoose.Schema({
+  label: String,
+  value: String
+}, { _id: false });
+
+const architectureSchema = new mongoose.Schema({
+  frontend: String,
+  backend: String,
+  authentication: String,
+  database: String,
+  deployment: String
+}, { _id: false });
+
 const projectSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -33,7 +51,12 @@ const projectSchema = new mongoose.Schema({
   order: {
     type: Number,
     default: 0
-  }
+  },
+  problem: String,
+  architecture: architectureSchema,
+  engineeringDecisions: [engineeringDecisionSchema],
+  scalingConsiderations: [String],
+  metrics: [metricSchema]
 }, {
   timestamps: true
 });

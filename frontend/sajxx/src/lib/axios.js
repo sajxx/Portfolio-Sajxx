@@ -102,6 +102,21 @@ export const api = {
     const { data } = await client.get("/api/achievements", { params });
     return data;
   },
+  async getEngineeringApproaches() {
+    const { data } = await client.get("/api/engineering-approach");
+    return data;
+  },
+  async createEngineeringApproach(payload) {
+    const { data } = await client.post("/api/engineering-approach", payload);
+    return data;
+  },
+  async updateEngineeringApproach(id, payload) {
+    const { data } = await client.put(`/api/engineering-approach/${id}`, payload);
+    return data;
+  },
+  async deleteEngineeringApproach(id) {
+    await client.delete(`/api/engineering-approach/${id}`);
+  },
   async submitContact(payload) {
     const { data } = await client.post("/api/contact", payload);
     return data;

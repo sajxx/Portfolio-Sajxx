@@ -1,23 +1,47 @@
 'use client';
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 
-const sections = [
+const allSections = [
   { id: "hero", label: "Home" },
   { id: "about", label: "About" },
   { id: "expertise", label: "Expertise" },
   { id: "projects", label: "Projects" },
+  { id: "engineering", label: "Engineering" },
   { id: "achievements", label: "Achievements" },
   { id: "contact", label: "Contact" },
 ];
 
 export default function Header() {
+  const [visibleSections, setVisibleSections] = useState(allSections);
   const [activeSection, setActiveSection] = useState("hero");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const isClickScrolling = useRef(false);
   const scrollTimeout = useRef(null);
+
+  // Detect which sections actually exist in the DOM
+  const detectSections = useCallback(() => {
+    const present = allSections.filter(({ id }) => document.getElementById(id));
+    setVisibleSections((prev) => {
+      if (prev.length === present.length && prev.every((s, i) => s.id === present[i]?.id)) {
+        return prev; // no change
+      }
+      return present;
+    });
+  }, []);
+
+  useEffect(() => {
+    // Initial detection after hydration
+    detectSections();
+
+    // Re-detect on DOM mutations (sections may mount/unmount asynchronously)
+    const observer = new MutationObserver(detectSections);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, [detectSections]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +78,7 @@ export default function Header() {
       }
     );
 
-    sections.forEach(({ id }) => {
+    visibleSections.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (el) {
         observer.observe(el);
@@ -62,7 +86,7 @@ export default function Header() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [visibleSections]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -102,7 +126,7 @@ export default function Header() {
           href="#hero" 
           className="group relative text-lg font-bold tracking-wider text-white"
         >
-          <span className="relative z-10">SAJXX</span>
+          <span className="relative z-10">SAJIN SANTHOSH</span>
           <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></span>
         </Link>
         
@@ -128,7 +152,7 @@ export default function Header() {
           } overflow-hidden transition-all duration-300`}
         >
           <ul className="glass rounded-2xl p-4 shadow-2xl lg:flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-transparent lg:p-0 lg:shadow-none">
-            {sections.map((section, index) => {
+            {visibleSections.map((section, index) => {
               const isActive = activeSection === section.id;
               return (
                 <li key={section.id} style={{ animationDelay: `${index * 50}ms` }}>

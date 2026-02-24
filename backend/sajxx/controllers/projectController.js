@@ -40,6 +40,7 @@ const createProject = async (req, res, next) => {
     const payload = { ...req.body };
     normalizeListField(payload, 'technologies');
     normalizeListField(payload, 'images');
+    normalizeListField(payload, 'scalingConsiderations');
 
     const projectCount = await Project.countDocuments();
     if (typeof payload.order !== 'number') {
@@ -58,6 +59,7 @@ const updateProject = async (req, res, next) => {
     const payload = { ...req.body };
     normalizeListField(payload, 'technologies');
     normalizeListField(payload, 'images');
+    normalizeListField(payload, 'scalingConsiderations');
 
     const project = await Project.findByIdAndUpdate(req.params.id, payload, {
       new: true,
